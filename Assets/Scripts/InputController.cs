@@ -8,10 +8,13 @@ public class InputController : MonoBehaviour
 
     private PlayerController controller;
 
+    private CameraController cameraController;
+
 
     void Start()
     {
         controller = GetComponent<PlayerController>();
+        cameraController = GetComponent<CameraController>();
     }
 
 
@@ -21,9 +24,20 @@ public class InputController : MonoBehaviour
 	    float horizontal = Input.GetAxis("Horizontal");
 	    float vertical = Input.GetAxis("Vertical");
 
-        controller.Horizontal = horizontal;
-        controller.Vertical = vertical;
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y");
+
+        cameraController.MouseX = mouseX;
+        cameraController.MouseY = mouseY;
+
+        controller.moveDir = (cameraController.GetCameraForword() * vertical + cameraController.GetCameraRight() * horizontal).normalized;
+        float m = new Vector3(horizontal,vertical).sqrMagnitude;
+        controller.moveAmount = Mathf.Clamp01(m);
 
         controller.Tick(Time.deltaTime);
-	}
+
+        cameraController.Tick(Time.deltaTime);
+
+
+    }
 }

@@ -38,6 +38,10 @@ public class InputController : MonoBehaviour
 
         cameraController.Tick(Time.deltaTime);
 
+    }
 
+    void FixedUpdate()
+    {
+        controller.FixedTick(Time.fixedDeltaTime);
     }
 }

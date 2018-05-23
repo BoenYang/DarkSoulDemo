@@ -38,10 +38,14 @@ public class PlayerController : MonoBehaviour
 
     public void Tick(float dt)
     {
-        OnGround();
+        Grounded = OnGround();
 
         ani.SetFloat("vertical",moveAmount,0.4f,dt);
 
+    }
+
+    public void FixedTick(float dt)
+    {
         rig.drag = (moveAmount > 0) ? 0 : 4;
 
 
@@ -55,37 +59,35 @@ public class PlayerController : MonoBehaviour
         {
             rig.velocity = moveDir * targetSpeed * moveAmount;
         }
-        
 
-        Quaternion tr = Quaternion.LookRotation(moveDir);
-        transform.rotation = Quaternion.Slerp(transform.rotation,tr,dt * moveAmount * RotationSpeed);
+        Vector3 targetDir = moveDir;
+        targetDir.y = 0;
+        if (targetDir == Vector3.zero)
+        {
+            targetDir = transform.forward;
+        }
+
+        Quaternion tr = Quaternion.LookRotation(targetDir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, tr, dt * moveAmount * RotationSpeed);
     }
 
     public bool OnGround()
     {
-
-        Grounded = false;
-
         bool r = false;
 
         Vector3 origin = transform.position + Vector3.up * toGround;
-        Vector3 dir = -Vector3.up;
-        float distance = toGround - 0.3f;
+        Vector3 dir = - Vector3.up;
+        float distance = toGround + 0.3f;
 
         RaycastHit hit;
-        Ray ray = new Ray();
-        ray.origin = origin;
-        ray.direction = dir;
 
         Debug.DrawRay(origin,dir * distance);
-        if (Physics.Raycast(origin,dir,out hit,distance,LayerMask.GetMask(new string[] { "Ground" })))
+        if (Physics.Raycast(origin,dir,out hit,distance,~LayerMask.NameToLayer("Ground")))
         {
-            Grounded = true;
+            r = true;
             Vector3 targetPos = hit.point;
-            targetPos.y += toGround;
             transform.position = targetPos;
         }
-
         return r;
     }
 

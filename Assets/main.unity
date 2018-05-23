@@ -1638,6 +1638,7 @@ GameObject:
   - component: {fileID: 1543832679}
   - component: {fileID: 1543832678}
   - component: {fileID: 1543832677}
+  - component: {fileID: 1543832681}
   m_Layer: 8
   m_Name: eerer
   m_TagString: Untagged
@@ -1711,6 +1712,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1543832681
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1543832676}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1563923680
 GameObject:
   m_ObjectHideFlags: 0
@@ -1945,12 +1961,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RunSpeed: 3.5
-  MoveSpeed: 2
+  MoveSpeed: 3.5
   RotationSpeed: 9
   moveDir: {x: 0, y: 0, z: 0}
   moveAmount: 0
   Grounded: 0
-  toGround: 0
+  toGround: 0.5
   run: 0
 --- !u!114 &1679386702
 MonoBehaviour:
@@ -2042,8 +2058,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
+  m_Radius: 0.42
+  m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &1680168705

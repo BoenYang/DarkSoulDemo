@@ -27,6 +27,8 @@ public class InputController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
 
+	    controller.run = Input.GetKey(KeyCode.LeftShift);
+
         cameraController.MouseX = mouseX;
         cameraController.MouseY = mouseY;
 

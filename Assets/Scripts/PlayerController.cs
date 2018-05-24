@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
 
     public float RotationSpeed = 9;
 
+    public bool UseTwoHanld = false;
+
+    public bool run;
+
     //[HideInInspector]
     public Vector3 moveDir;
 
@@ -22,7 +26,7 @@ public class PlayerController : MonoBehaviour
 
     public float toGround = 1f;
 
-    public bool run;
+  
 
     private Animator ani;
 
@@ -39,9 +43,7 @@ public class PlayerController : MonoBehaviour
     public void Tick(float dt)
     {
         Grounded = OnGround();
-
-        ani.SetFloat("vertical",moveAmount,0.4f,dt);
-
+        HandleAnimation(dt);
     }
 
     public void FixedTick(float dt)
@@ -69,6 +71,17 @@ public class PlayerController : MonoBehaviour
 
         Quaternion tr = Quaternion.LookRotation(targetDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, tr, dt * moveAmount * RotationSpeed);
+    }
+
+    private void HandleAnimation(float dt)
+    {
+        ani.SetBool("onGround",Grounded);
+        ani.SetFloat("vertical", moveAmount, 0.4f, dt);
+        ani.SetBool("two_handled", UseTwoHanld);
+        if (moveAmount > 0)
+        {
+            ani.SetBool("run", run);
+        }
     }
 
     public bool OnGround()

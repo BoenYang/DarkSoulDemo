@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
 
     public bool run;
 
+    public bool z, x, c, v;
+
     //[HideInInspector]
     public Vector3 moveDir;
 
@@ -26,11 +28,11 @@ public class PlayerController : MonoBehaviour
 
     public float toGround = 1f;
 
-  
-
     private Animator ani;
 
     private Rigidbody rig;
+
+    public bool canMove;
 
     void Start()
     {
@@ -48,8 +50,16 @@ public class PlayerController : MonoBehaviour
 
     public void FixedTick(float dt)
     {
-        rig.drag = (moveAmount > 0) ? 0 : 4;
+        canMove = ani.GetBool("canMove");
 
+        DetectAction();
+
+        rig.drag = (moveAmount > 0 || Grounded == false) ? 0 : 4;
+
+        if (!canMove)
+        {
+            return;
+        }
 
         float targetSpeed = MoveSpeed;
         if (run)
@@ -81,6 +91,42 @@ public class PlayerController : MonoBehaviour
         if (moveAmount > 0)
         {
             ani.SetBool("run", run);
+        }
+    }
+
+    private void DetectAction()
+    {
+        if (z == false && x == false && c == false && v == false)
+        {
+            return ;
+        }
+
+        if (!canMove)
+        {
+            return;
+        }
+
+        string targetAnimation = null;
+        if (z)
+        {
+            targetAnimation = "oh_attack_1";
+        }
+        if (x)
+        {
+            targetAnimation = "oh_attack_2";
+        }
+        if (c)
+        {
+            targetAnimation = "oh_attack_3";
+        }
+        if (v)
+        {
+            targetAnimation = "th_attack_1";
+        }
+
+        if (!string.IsNullOrEmpty(targetAnimation))
+        {
+            ani.CrossFade(targetAnimation,0.1f);
         }
     }
 

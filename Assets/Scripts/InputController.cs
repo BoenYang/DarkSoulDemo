@@ -40,6 +40,10 @@ public class InputController : MonoBehaviour
 
         cameraController.Tick(Time.deltaTime);
 
+	    controller.z = Input.GetKey(KeyCode.Z);
+	    controller.x = Input.GetKey(KeyCode.X);
+	    controller.c = Input.GetKey(KeyCode.C);
+	    controller.v = Input.GetKey(KeyCode.V);
     }
 
     void FixedUpdate()

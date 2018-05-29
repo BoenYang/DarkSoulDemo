@@ -12,9 +12,15 @@ public class PlayerController : MonoBehaviour
 
     public float RotationSpeed = 9;
 
-    public bool UseTwoHanld = false;
+    public bool UseTwoHand = false;
 
     public bool run;
+
+    public bool canMove;
+
+    public bool Lockon;
+
+    public bool Roll;
 
     public bool z, x, c, v;
 
@@ -28,11 +34,13 @@ public class PlayerController : MonoBehaviour
 
     public float toGround = 1f;
 
+    public Transform LookOnTarget;
+
     private Animator ani;
 
     private Rigidbody rig;
 
-    public bool canMove;
+
 
     void Start()
     {
@@ -45,7 +53,10 @@ public class PlayerController : MonoBehaviour
     public void Tick(float dt)
     {
         Grounded = OnGround();
-        HandleAnimation(dt);
+        ani.SetBool("onGround", Grounded);
+        ani.SetBool("lockon", Lockon);
+        HandleMoveAnimation(dt);
+        HandleTwoHandAnimation();
     }
 
     public void FixedTick(float dt)
@@ -72,26 +83,50 @@ public class PlayerController : MonoBehaviour
             rig.velocity = moveDir * targetSpeed * moveAmount;
         }
 
-        Vector3 targetDir = moveDir;
+        Vector3 targetDir = !Lockon ? moveDir : LookOnTarget.position - transform.position;
         targetDir.y = 0;
         if (targetDir == Vector3.zero)
         {
             targetDir = transform.forward;
         }
-
+        targetDir.Normalize();
         Quaternion tr = Quaternion.LookRotation(targetDir);
         transform.rotation = Quaternion.Slerp(transform.rotation, tr, dt * moveAmount * RotationSpeed);
+
     }
 
-    private void HandleAnimation(float dt)
+    private void HandleMoveAnimation(float dt)
     {
-        ani.SetBool("onGround",Grounded);
-        ani.SetFloat("vertical", moveAmount, 0.4f, dt);
-        ani.SetBool("two_handled", UseTwoHanld);
-        if (moveAmount > 0)
+        if (!Lockon)
         {
-            ani.SetBool("run", run);
+            ani.SetFloat("vertical", moveAmount, 0.4f, dt);
+            if (moveAmount > 0)
+            {
+                ani.SetBool("run", run);
+            }
         }
+        else
+        {
+            HandleLockMoveAnimation(dt);
+        }
+    }
+
+    private void HandleLockMoveAnimation(float dt)
+    {
+        Vector3 relativeDir = transform.InverseTransformDirection(moveDir);
+        Debug.Log(relativeDir);
+        ani.SetFloat("vertical", relativeDir.z,0.2f,dt);
+        ani.SetFloat("horizontal",relativeDir.x, 0.2f, dt);
+    }
+
+    private void HandleTwoHandAnimation()
+    {
+        ani.SetBool("two_handled", UseTwoHand);
+    }
+
+    private void HandleRollAnimation()
+    {
+
     }
 
     private void DetectAction()

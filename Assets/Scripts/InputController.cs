@@ -44,7 +44,26 @@ public class InputController : MonoBehaviour
 	    controller.x = Input.GetKey(KeyCode.X);
 	    controller.c = Input.GetKey(KeyCode.C);
 	    controller.v = Input.GetKey(KeyCode.V);
-    }
+
+	    bool a = Input.GetKeyDown(KeyCode.Q);
+	    if (a)
+	    {
+	        controller.Lockon = !controller.Lockon;
+	        if (controller.LookOnTarget == null)
+	        {
+	            controller.Lockon = false;
+	        }
+
+	        cameraController.LockTarget = controller.LookOnTarget;
+	        cameraController.lockon = controller.Lockon;
+	    }
+
+	    bool e = Input.GetKeyDown(KeyCode.E);
+	    if (e)
+	    {
+	        controller.Roll = e;
+	    }
+	}
 
     void FixedUpdate()
     {

@@ -22,6 +22,10 @@ public class CameraController : MonoBehaviour
 
     public float MinTiltAngle = -10;
 
+    public Transform LockTarget;
+
+    public bool lockon;
+
     [HideInInspector]
     public float MouseX;
 
@@ -76,14 +80,29 @@ public class CameraController : MonoBehaviour
             smoothY = MouseY;
         }
 
-        lookAngle += RotationSpeed * dt * smoothX;
-
-        cameraHolder.rotation = Quaternion.Euler(0, lookAngle, 0);
-
         tiltAngle -= RotationSpeed * dt * smoothY;
 
         tiltAngle = Mathf.Clamp(tiltAngle, MinTiltAngle, MaxTiltAngle);
         pivot.localRotation = Quaternion.Euler(tiltAngle, 0,0);
+ 
+        if (lockon && LockTarget != null)
+        {
+            Vector3 targetDir = LockTarget.position - cameraHolder.position ;
+            targetDir.Normalize();
+
+            if (targetDir == Vector3.zero)
+            {
+                targetDir = cameraHolder.forward;
+            }
+
+            Quaternion targetRot = Quaternion.LookRotation(targetDir);
+            cameraHolder.rotation = Quaternion.Slerp(cameraHolder.rotation,targetRot, dt * 9);
+            lookAngle = cameraHolder.eulerAngles.y;
+            return;
+        }
+
+        lookAngle += RotationSpeed * dt * smoothX;
+        cameraHolder.rotation = Quaternion.Euler(0, lookAngle, 0);
     }
 
     public Vector3 GetCameraForword()

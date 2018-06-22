@@ -40,9 +40,13 @@ public class InputController : MonoBehaviour
 
         cameraController.Tick(Time.deltaTime);
 
+        //lt
 	    controller.z = Input.GetKey(KeyCode.Z);
+        //lb
 	    controller.x = Input.GetKey(KeyCode.X);
+        //rt
 	    controller.c = Input.GetKey(KeyCode.C);
+        //rb
 	    controller.v = Input.GetKey(KeyCode.V);
 
 	    bool a = Input.GetKeyDown(KeyCode.Q);
@@ -59,10 +63,7 @@ public class InputController : MonoBehaviour
 	    }
 
 	    bool e = Input.GetKeyDown(KeyCode.E);
-	    if (e)
-	    {
-	        controller.Roll = e;
-	    }
+        controller.Roll = e;
 	}
 
     void FixedUpdate()

@@ -4644,15 +4644,18 @@ MonoBehaviour:
   run: 0
   canMove: 0
   Lockon: 0
+  Roll: 0
   z: 0
   x: 0
   c: 0
   v: 0
+  rolling: 0
   moveDir: {x: 0, y: 0, z: 0}
   moveAmount: 0
   Grounded: 0
   toGround: 0.5
   LookOnTarget: {fileID: 1782969252}
+  rig: {fileID: 0}
 --- !u!114 &1679386702
 MonoBehaviour:
   m_ObjectHideFlags: 0

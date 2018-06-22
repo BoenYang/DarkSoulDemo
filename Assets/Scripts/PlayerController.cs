@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     public bool z, x, c, v;
 
+    public bool rolling = false;
+
     //[HideInInspector]
     public Vector3 moveDir;
 
@@ -38,9 +40,8 @@ public class PlayerController : MonoBehaviour
 
     private Animator ani;
 
-    private Rigidbody rig;
-
-
+    [HideInInspector]
+    public Rigidbody rig;
 
     void Start()
     {
@@ -57,17 +58,19 @@ public class PlayerController : MonoBehaviour
         ani.SetBool("lockon", Lockon);
         HandleMoveAnimation(dt);
         HandleTwoHandAnimation();
+        HandleRollAnimation(dt);
     }
 
     public void FixedTick(float dt)
     {
         canMove = ani.GetBool("canMove");
+        rolling = ani.GetBool("rolling");
 
         DetectAction();
 
         rig.drag = (moveAmount > 0 || Grounded == false) ? 0 : 4;
 
-        if (!canMove)
+        if (!canMove || rolling)
         {
             return;
         }
@@ -124,9 +127,29 @@ public class PlayerController : MonoBehaviour
         ani.SetBool("two_handled", UseTwoHand);
     }
 
-    private void HandleRollAnimation()
+    private void HandleRollAnimation(float dt)
     {
+        if (rolling) {
+            return;
+        }
 
+        if (Roll) {
+            Debug.Log("roll input");
+            rolling = true;
+            ani.applyRootMotion = true;
+            Vector3 relativeDir = transform.InverseTransformDirection(moveDir);
+            ani.CrossFade("Rolls",0.1f);
+            if (moveAmount <= 0.3)
+            {
+                ani.SetFloat("vertical", 0);
+                ani.SetFloat("horizontal", 0);
+            }
+            else {
+                ani.SetFloat("vertical", relativeDir.z, 0.2f, dt);
+                ani.SetFloat("horizontal", relativeDir.x, 0.2f, dt);
+            }
+        
+        }
     }
 
     private void DetectAction()

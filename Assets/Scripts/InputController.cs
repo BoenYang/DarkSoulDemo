@@ -5,7 +5,6 @@ using UnityEngine;
 public class InputController : MonoBehaviour
 {
 
-
     private PlayerController controller;
 
     private CameraController cameraController;
@@ -41,13 +40,16 @@ public class InputController : MonoBehaviour
         cameraController.Tick(Time.deltaTime);
 
         //lt
-	    controller.z = Input.GetKey(KeyCode.Z);
+	    controller.lt = Input.GetKey(KeyCode.Z);
         //lb
-	    controller.x = Input.GetKey(KeyCode.X);
+	    controller.lb = Input.GetKey(KeyCode.X);
         //rt
-	    controller.c = Input.GetKey(KeyCode.C);
+	    controller.rt = Input.GetKey(KeyCode.C);
         //rb
-	    controller.v = Input.GetKey(KeyCode.V);
+	    controller.rb = Input.GetKey(KeyCode.V);
+
+        controller.UseItem = Input.GetKey(KeyCode.Alpha1);
+
 
 	    bool a = Input.GetKeyDown(KeyCode.Q);
 	    if (a)

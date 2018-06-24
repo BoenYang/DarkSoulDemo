@@ -18,11 +18,15 @@ public class PlayerController : MonoBehaviour
 
     public bool canMove;
 
+    public bool usingItem;
+
     public bool Lockon;
 
     public bool Roll;
 
-    public bool z, x, c, v;
+    public bool UseItem;
+
+    public bool lt, lb, rt, rb;
 
     public bool rolling = false;
 
@@ -40,6 +44,10 @@ public class PlayerController : MonoBehaviour
 
     private Animator ani;
 
+    private ActionManager actionManager;
+
+    private InventoryManager inventoryManager;
+
     [HideInInspector]
     public Rigidbody rig;
 
@@ -47,6 +55,10 @@ public class PlayerController : MonoBehaviour
     {
         ani = GetComponent<Animator>();
         rig = GetComponent<Rigidbody>();
+        actionManager = GetComponent<ActionManager>();
+        inventoryManager = GetComponent<InventoryManager>();
+
+        inventoryManager.Init(this, actionManager);
         rig.angularDrag = 999;
         rig.drag = 4;
     }
@@ -56,15 +68,18 @@ public class PlayerController : MonoBehaviour
         Grounded = OnGround();
         ani.SetBool("onGround", Grounded);
         ani.SetBool("lockon", Lockon);
+
         HandleMoveAnimation(dt);
         HandleTwoHandAnimation();
         HandleRollAnimation(dt);
+        HandleUseItemAnimation();
     }
 
     public void FixedTick(float dt)
     {
         canMove = ani.GetBool("canMove");
         rolling = ani.GetBool("rolling");
+        usingItem = ani.GetBool("usingItem");
 
         DetectAction();
 
@@ -117,7 +132,6 @@ public class PlayerController : MonoBehaviour
     private void HandleLockMoveAnimation(float dt)
     {
         Vector3 relativeDir = transform.InverseTransformDirection(moveDir);
-        Debug.Log(relativeDir);
         ani.SetFloat("vertical", relativeDir.z,0.2f,dt);
         ani.SetFloat("horizontal",relativeDir.x, 0.2f, dt);
     }
@@ -152,39 +166,61 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleUseItemAnimation() {
+        if (!canMove || rolling || usingItem) {
+            return;
+        }
+
+
+        if (UseItem) {
+            Debug.Log("using item");
+            ani.CrossFade("UseItem",0.1f);
+        }
+    }
+
     private void DetectAction()
     {
-        if (z == false && x == false && c == false && v == false)
+        if (lt == false && lb == false && rt == false && rb == false)
         {
             return ;
         }
 
-        if (!canMove)
+        if (!canMove || usingItem || rolling)
         {
             return;
         }
 
-        string targetAnimation = null;
-        if (z)
+        ActionManager.ActionSlot slot = null;
+
+  
+        if (lt)
         {
-            targetAnimation = "oh_attack_1";
+            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.LT);
         }
-        if (x)
+        if (lb)
         {
-            targetAnimation = "oh_attack_2";
+            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.LB);
         }
-        if (c)
+        if (rt)
         {
-            targetAnimation = "oh_attack_3";
+            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.RT);
         }
-        if (v)
+        if (rb)
         {
-            targetAnimation = "th_attack_1";
+            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.RB);
         }
 
+        if (slot == null) {
+            return;
+        }
+
+        string targetAnimation = slot.AnimationName;
+        Debug.Log(targetAnimation);
         if (!string.IsNullOrEmpty(targetAnimation))
         {
-            ani.CrossFade(targetAnimation,0.1f);
+            ani.SetBool("mirror",slot.Mirror);
+            ani.CrossFade(targetAnimation,0.3f);
+           
         }
     }
 

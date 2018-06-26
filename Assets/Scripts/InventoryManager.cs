@@ -7,12 +7,39 @@ public class Weapon {
 
     public string Name;
 
-    public string AniName;
-
-    public string PunchAniName;
-
     public string ModelName;
 
+    public WeaponAction[] Actions;
+
+    public WeaponActionType ActionType;
+}
+
+public enum WeaponActionType {
+    Attack,
+    Blocking,
+    Spells,
+    Parry
+}
+
+[System.Serializable]
+public class ActionSlot
+{
+    public ActionInputType Type;
+    public string AnimationName;
+    public bool Mirror;
+}
+
+public enum ActionInputType
+{
+    LT,
+    LB,
+    RT,
+    RB
+}
+
+[System.Serializable]
+public class WeaponAction {
+    public string AniName;
     public bool Mirror;
 }
 
@@ -42,6 +69,8 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void ChangeLeftHandWeapon(Weapon weapon) {
+        LeftHandWeapon = weapon;
+
         Transform rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
         Transform weaponRoot = null;
         weaponRoot = rightHand.Find("weapons");
@@ -66,6 +95,8 @@ public class InventoryManager : MonoBehaviour {
     }
 
     public void ChangeRightHandWeapon(Weapon weapon) {
+        RightHandWeapon = weapon;
+
         Transform rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
         Transform weaponRoot = null;
         weaponRoot = rightHand.Find("weapons");

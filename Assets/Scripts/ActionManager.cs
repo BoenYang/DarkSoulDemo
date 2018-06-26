@@ -4,20 +4,7 @@ using UnityEngine;
 
 public class ActionManager : MonoBehaviour {
 
-    [System.Serializable]
-    public class ActionSlot {
-        public ActionSlotType Type;
-        public string AnimationName;
-        public bool Mirror;
-    }
 
-    public enum ActionSlotType
-    {
-        LT,
-        LB,
-        RT,
-        RB
-    }
 
     public ActionSlot[] Slots;
 
@@ -27,7 +14,7 @@ public class ActionManager : MonoBehaviour {
 
     private const string ThAttackPrefix = "th_";
 
-    public ActionSlot GetActionSlot(ActionSlotType type) {
+    public ActionSlot GetActionSlot(ActionInputType type) {
         for (int i = 0; i < Slots.Length; i++)
         {
             if (Slots[i].Type == type) {
@@ -38,16 +25,16 @@ public class ActionManager : MonoBehaviour {
     }
 
     public void UpdateLeftActionSlot(Weapon leftWeapon) {
-        ActionSlot LTSlot = this.GetActionSlot(ActionSlotType.LT);
-        LTSlot.AnimationName = ActionManager.OhAttackPrefix + leftWeapon.AniName;
-        LTSlot.Mirror = leftWeapon.Mirror;
+        ActionSlot LTSlot = this.GetActionSlot(ActionInputType.LT);
+        LTSlot.AnimationName = ActionManager.OhAttackPrefix + leftWeapon.Actions[0].AniName;
+        LTSlot.Mirror = leftWeapon.Actions[0].Mirror;
 
     }
 
     public void UpdateRightActionSlot(Weapon rightWeapon) {
-        ActionSlot RTSlot = this.GetActionSlot(ActionSlotType.RT);
-        RTSlot.AnimationName = ActionManager.OhAttackPrefix + rightWeapon.AniName;
-        RTSlot.Mirror = rightWeapon.Mirror;
+        ActionSlot RTSlot = this.GetActionSlot(ActionInputType.RT);
+        RTSlot.AnimationName = ActionManager.OhAttackPrefix + rightWeapon.Actions[0].AniName;
+        RTSlot.Mirror = rightWeapon.Actions[0].Mirror;
     }
 
 

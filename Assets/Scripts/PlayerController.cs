@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
 
     public bool usingItem;
 
+    public bool blocking;
+
     public bool Lockon;
 
     public bool Roll;
@@ -68,6 +70,7 @@ public class PlayerController : MonoBehaviour
         Grounded = OnGround();
         ani.SetBool("onGround", Grounded);
         ani.SetBool("lockon", Lockon);
+        ani.SetBool("blocking", blocking);
 
         HandleMoveAnimation(dt);
         HandleTwoHandAnimation();
@@ -80,7 +83,7 @@ public class PlayerController : MonoBehaviour
         canMove = ani.GetBool("canMove");
         rolling = ani.GetBool("rolling");
         usingItem = ani.GetBool("usingItem");
-
+ 
         DetectAction();
 
         rig.drag = (moveAmount > 0 || Grounded == false) ? 0 : 4;
@@ -171,7 +174,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-
         if (UseItem) {
             Debug.Log("using item");
             ani.CrossFade("UseItem",0.1f);
@@ -190,38 +192,55 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        ActionManager.ActionSlot slot = null;
+        ActionSlot slot = null;
 
   
         if (lt)
         {
-            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.LT);
+            slot = actionManager.GetActionSlot(ActionInputType.LT);
         }
         if (lb)
         {
-            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.LB);
+            slot = actionManager.GetActionSlot(ActionInputType.LB);
         }
         if (rt)
         {
-            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.RT);
+            slot = actionManager.GetActionSlot(ActionInputType.RT);
         }
         if (rb)
         {
-            slot = actionManager.GetActionSlot(ActionManager.ActionSlotType.RB);
+            slot = actionManager.GetActionSlot(ActionInputType.RB);
         }
 
         if (slot == null) {
             return;
         }
 
+        switch (slot.ActionType) {
+            case ActionType.Attack:
+                this.AttackAction(slot);
+                break;
+            case ActionType.Blocking:
+                this.BlockAction(slot);
+                break;
+        }
+     
+    }
+
+    private void AttackAction(ActionSlot slot) {
         string targetAnimation = slot.AnimationName;
         Debug.Log(targetAnimation);
         if (!string.IsNullOrEmpty(targetAnimation))
         {
-            ani.SetBool("mirror",slot.Mirror);
-            ani.CrossFade(targetAnimation,0.3f);
-           
+            ani.SetBool("mirror", slot.Mirror);
+            ani.CrossFade(targetAnimation, 0.3f);
         }
+    }
+
+    private void BlockAction(ActionSlot slot) {
+        blocking = true;
+        ani.SetBool("blocking",blocking);
+        ani.SetBool("leftshield", true);
     }
 
     public bool OnGround()

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ActionManager : MonoBehaviour {
 
-
-
     public ActionSlot[] Slots;
 
     private const string HeavyAttackPrefix = "gs_";
@@ -17,7 +15,7 @@ public class ActionManager : MonoBehaviour {
     public ActionSlot GetActionSlot(ActionInputType type) {
         for (int i = 0; i < Slots.Length; i++)
         {
-            if (Slots[i].Type == type) {
+            if (Slots[i].InputType == type) {
                 return Slots[i];
             }
         }
@@ -26,15 +24,32 @@ public class ActionManager : MonoBehaviour {
 
     public void UpdateLeftActionSlot(Weapon leftWeapon) {
         ActionSlot LTSlot = this.GetActionSlot(ActionInputType.LT);
-        LTSlot.AnimationName = ActionManager.OhAttackPrefix + leftWeapon.Actions[0].AniName;
-        LTSlot.Mirror = leftWeapon.Actions[0].Mirror;
+        WeaponAction lw_lt = leftWeapon.GetAction(ActionInputType.LT);
+        LTSlot.AnimationName = lw_lt.AniName;
+        LTSlot.Mirror = lw_lt.LeftMirror;
+        LTSlot.ActionType = lw_lt.ActionType;
 
+        ActionSlot LBSlot = this.GetActionSlot(ActionInputType.LB);
+        WeaponAction lw_lb = leftWeapon.GetAction(ActionInputType.LB);
+        LBSlot.AnimationName = lw_lb.AniName;
+        LBSlot.Mirror = lw_lb.LeftMirror;
+        LBSlot.ActionType = lw_lb.ActionType;
     }
 
     public void UpdateRightActionSlot(Weapon rightWeapon) {
+
         ActionSlot RTSlot = this.GetActionSlot(ActionInputType.RT);
-        RTSlot.AnimationName = ActionManager.OhAttackPrefix + rightWeapon.Actions[0].AniName;
-        RTSlot.Mirror = rightWeapon.Actions[0].Mirror;
+        WeaponAction rw_rt = rightWeapon.GetAction(ActionInputType.RT);
+        RTSlot.AnimationName = rw_rt.AniName;
+        RTSlot.Mirror = rw_rt.LeftMirror;
+        RTSlot.ActionType = rw_rt.ActionType;
+
+
+        ActionSlot RBSlot = this.GetActionSlot(ActionInputType.RB);
+        WeaponAction rw_rb = rightWeapon.GetAction(ActionInputType.RB);
+        RBSlot.AnimationName = rw_rb.AniName;
+        RBSlot.Mirror = rw_rb.LeftMirror;
+        RBSlot.ActionType = rw_rb.ActionType;
     }
 
 

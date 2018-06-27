@@ -11,10 +11,17 @@ public class Weapon {
 
     public WeaponAction[] Actions;
 
-    public WeaponActionType ActionType;
+    public WeaponAction GetAction(ActionInputType type) {
+        for (int i = 0; i < Actions.Length; i++) {
+            if (Actions[i].InputType == type) {
+                return Actions[i];
+            }
+        }
+        return null;
+    }
 }
 
-public enum WeaponActionType {
+public enum ActionType {
     Attack,
     Blocking,
     Spells,
@@ -24,7 +31,8 @@ public enum WeaponActionType {
 [System.Serializable]
 public class ActionSlot
 {
-    public ActionInputType Type;
+    public ActionType ActionType;
+    public ActionInputType InputType;
     public string AnimationName;
     public bool Mirror;
 }
@@ -40,7 +48,9 @@ public enum ActionInputType
 [System.Serializable]
 public class WeaponAction {
     public string AniName;
-    public bool Mirror;
+    public bool LeftMirror;
+    public ActionType ActionType;
+    public ActionInputType InputType;
 }
 
 public class InventoryManager : MonoBehaviour {
@@ -64,14 +74,14 @@ public class InventoryManager : MonoBehaviour {
         this.actionManager = actionManager;
         animator = this.controller.GetComponent<Animator>();
 
-        ChangeLeftHandWeapon(Weapons[0]);
-        ChangeRightHandWeapon(Weapons[1]);
+        ChangeLeftHandWeapon(Weapons[1]);
+        ChangeRightHandWeapon(Weapons[0]);
     }
 
     public void ChangeLeftHandWeapon(Weapon weapon) {
         LeftHandWeapon = weapon;
 
-        Transform rightHand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+        Transform rightHand = animator.GetBoneTransform(HumanBodyBones.LeftHand);
         Transform weaponRoot = null;
         weaponRoot = rightHand.Find("weapons");
 

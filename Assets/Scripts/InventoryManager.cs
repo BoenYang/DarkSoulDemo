@@ -7,7 +7,17 @@ public class Weapon {
 
     public string Name;
 
-    public string ModelName;
+    public GameObject Model;
+
+    public Vector3 LeftHandPos;
+
+    public Vector3 LeftHandRot;
+
+    public Vector3 RightHandPos;
+
+    public Vector3 RightHandRot;
+
+    public float Scale;
 
     public WeaponAction[] Actions;
 
@@ -48,7 +58,7 @@ public enum ActionInputType
 [System.Serializable]
 public class WeaponAction {
     public string AniName;
-    public bool LeftMirror;
+    public bool Mirror;
     public ActionType ActionType;
     public ActionInputType InputType;
 }
@@ -91,14 +101,17 @@ public class InventoryManager : MonoBehaviour {
 
         foreach (Transform tr in weaponRoot)
         {
-            tr.gameObject.SetActive(false);
+            GameObject.Destroy(tr.gameObject);
         }
 
         if (weaponRoot != null && weapon != null)
         {
+            GameObject weaponGo = this.InstantiateWeapon(weapon);
+            weaponGo.transform.SetParent(weaponRoot);
+            weaponGo.transform.localPosition = weapon.LeftHandPos;
+            weaponGo.transform.localEulerAngles = weapon.LeftHandRot;
+            weaponGo.transform.localScale = Vector3.one * weapon.Scale;
             animator.Play("left_idle");
-            Transform weaponTr = weaponRoot.Find(weapon.ModelName);
-            weaponTr.gameObject.SetActive(true);
         }
 
         actionManager.UpdateLeftActionSlot(weapon);
@@ -113,7 +126,6 @@ public class InventoryManager : MonoBehaviour {
 
         if (weaponRoot == null)
         {
-       
             return;
         }
 
@@ -124,12 +136,21 @@ public class InventoryManager : MonoBehaviour {
 
         if (weaponRoot != null && weapon != null)
         {
+            GameObject weaponGo = this.InstantiateWeapon(weapon);
+            weaponGo.transform.SetParent(weaponRoot);
+            weaponGo.transform.localPosition = weapon.RightHandPos;
+            weaponGo.transform.localEulerAngles = weapon.RightHandRot;
+            weaponGo.transform.localScale = Vector3.one * weapon.Scale;
             animator.Play("right_idle");
-            Transform weaponTr = weaponRoot.Find(weapon.ModelName);
-            weaponTr.gameObject.SetActive(true);
         }
 
         actionManager.UpdateRightActionSlot(weapon);
+    }
+
+    public GameObject InstantiateWeapon(Weapon weapon) {
+        GameObject go = GameObject.Instantiate(weapon.Model);
+        go.name = weapon.Name;
+        return go;
     }
 
 }

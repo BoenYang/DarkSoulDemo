@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
         canMove = ani.GetBool("canMove");
         rolling = ani.GetBool("rolling");
         usingItem = ani.GetBool("usingItem");
- 
+        blocking = false;
         DetectAction();
 
         rig.drag = (moveAmount > 0 || Grounded == false) ? 0 : 4;
@@ -223,6 +223,9 @@ public class PlayerController : MonoBehaviour
             case ActionType.Blocking:
                 this.BlockAction(slot);
                 break;
+            case ActionType.Parry:
+                this.ParryAction(slot);
+                break;
         }
      
     }
@@ -239,8 +242,17 @@ public class PlayerController : MonoBehaviour
 
     private void BlockAction(ActionSlot slot) {
         blocking = true;
-        ani.SetBool("blocking",blocking);
-        ani.SetBool("leftshield", true);
+        ani.SetBool("leftshield", slot.Mirror);
+    }
+
+    private void ParryAction(ActionSlot slot) {
+        string targetAnimation = slot.AnimationName;
+        Debug.Log(targetAnimation);
+        if (!string.IsNullOrEmpty(targetAnimation))
+        {
+            ani.SetBool("mirror", slot.Mirror);
+            ani.CrossFade(targetAnimation, 0.3f);
+        }
     }
 
     public bool OnGround()

@@ -26,13 +26,13 @@ public class ActionManager : MonoBehaviour {
         ActionSlot LTSlot = this.GetActionSlot(ActionInputType.LT);
         WeaponAction lw_lt = leftWeapon.GetAction(ActionInputType.LT);
         LTSlot.AnimationName = lw_lt.AniName;
-        LTSlot.Mirror = lw_lt.LeftMirror;
+        LTSlot.Mirror = lw_lt.Mirror;
         LTSlot.ActionType = lw_lt.ActionType;
 
         ActionSlot LBSlot = this.GetActionSlot(ActionInputType.LB);
         WeaponAction lw_lb = leftWeapon.GetAction(ActionInputType.LB);
         LBSlot.AnimationName = lw_lb.AniName;
-        LBSlot.Mirror = lw_lb.LeftMirror;
+        LBSlot.Mirror = lw_lb.Mirror;
         LBSlot.ActionType = lw_lb.ActionType;
     }
 
@@ -41,14 +41,14 @@ public class ActionManager : MonoBehaviour {
         ActionSlot RTSlot = this.GetActionSlot(ActionInputType.RT);
         WeaponAction rw_rt = rightWeapon.GetAction(ActionInputType.RT);
         RTSlot.AnimationName = rw_rt.AniName;
-        RTSlot.Mirror = rw_rt.LeftMirror;
+        RTSlot.Mirror = rw_rt.Mirror;
         RTSlot.ActionType = rw_rt.ActionType;
 
 
         ActionSlot RBSlot = this.GetActionSlot(ActionInputType.RB);
         WeaponAction rw_rb = rightWeapon.GetAction(ActionInputType.RB);
         RBSlot.AnimationName = rw_rb.AniName;
-        RBSlot.Mirror = rw_rb.LeftMirror;
+        RBSlot.Mirror = rw_rb.Mirror;
         RBSlot.ActionType = rw_rb.ActionType;
     }
 
